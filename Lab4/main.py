@@ -42,10 +42,13 @@ def wilson_func(params, x1, x2, g_exp):
 def plot_diagrams():
     plt.figure(figsize=(13, 6))
 
+    P2_real = 1 - P_real
+
     plt.subplot(1, 2, 1)
     plt.plot(x1_range, P_real, label='Модель ассоциации P(x) (жидкость)')
     plt.plot(y1_calc, P_real, label='Модель ассоциации P(y) (газ)')
     plt.scatter(x1, P, color='red', label='Экспериментальные данные')
+    # plt.fill_betweenx(P_real, y1_calc, 1, color='blue', alpha=0.1, label='Газовая фаза')
     plt.fill_betweenx(P_real, x1_range, y1_calc, color='gray', alpha=0.2, label='Двухфазная область')
     plt.text(0.5, 0.16, 'vapor', fontsize=12, color='black')
     plt.text(0.1, 0.195, 'liquid', fontsize=12, color='black')
