@@ -72,12 +72,15 @@ class VLEModel:
         plt.grid(True)
 
         plt.subplot(1, 2, 2)
-        plt.plot(x_range, P_total, label='Calculated Pressure')
-        plt.plot(y1_calc, P_total, label='Calculated Pressure')
+        plt.plot(x_range, P_total, label='Calculated Pressure', color = "blue")
+        plt.plot(y1_calc, P_total, label='Calculated Pressure', color = "blue")
         plt.scatter(self.x1, self.P, color='red', label='Experimental Data')
+        plt.fill_betweenx(P_total, x_range, y1_calc, color='green', alpha=0.5, label='Double phase area')
+        # plt.fill_betweenx(P_total, np.maximum(x_range, y1_calc), 1, color='lightblue', alpha=0.2, label='High Pressure')
+        # plt.fill_betweenx(P_total, 0, np.minimum(x_range, y1_calc), color='lightcoral', alpha=0.2, label='Low Pressure')
         plt.xlabel('Mole Fraction of Acetone in Liquid (x1)')
         plt.ylabel('Pressure (bar)')
-        plt.title('P-x Diagram for Acetone + n-Hexane at T = 298.15 K')
+        plt.title('P-xy Diagram for Acetone + n-Hexane at T = 298.15 K')
         plt.legend()
         plt.grid(True)
 
