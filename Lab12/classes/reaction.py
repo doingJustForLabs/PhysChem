@@ -3,6 +3,7 @@ from .substance import Substance
 
 
 class Reaction(Enthalpy, Entropy):
+    R = 8.314
 
     def __init__(self, reaction: str):
         super().__init__()

@@ -1,9 +1,9 @@
 from math import exp
 
+from scipy.optimize import fsolve
+
 from Lab12.classes.nasa import nasa_db
 from Lab12.classes.reaction import Reaction
-from Lab12.classes.substance import Substance
-from scipy.optimize import minimize, fsolve
 
 r = Reaction("C2H4 + H2 => C2H6")
 
@@ -55,4 +55,4 @@ if __name__ == "__main__":
         print(f'[{substance}] = {p[substance] - x_eq:.4e}')
 
     # 5. Равновесная степень превращения вещества A (C2H4)
-    print(f'Степень превращения вещества A: {x_eq / p["C2H4"]:.4f}')
+    print(f'Степень превращения вещества A: {x_eq / p["C2H4"]:.3f}')
