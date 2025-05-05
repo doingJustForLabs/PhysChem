@@ -25,12 +25,19 @@ class BaseGraphic:
         plt.show()
 
 
-
 class DependencyGraphic(BaseGraphic):
 
-    def __init__(self, x: list[float], y: list[float], title: str = '', grid: bool = True,
-                 figsize: Optional[tuple[int, int]] = None, filepath: Optional[str] = None,
-                 xlabel: Optional[str] = None, ylabel: Optional[str] = None):
+    def __init__(
+        self,
+        x: list[float],
+        y: list[float],
+        title: str = "",
+        grid: bool = True,
+        figsize: Optional[tuple[int, int]] = None,
+        filepath: Optional[str] = None,
+        xlabel: Optional[str] = None,
+        ylabel: Optional[str] = None,
+    ):
         super().__init__(figsize=figsize)
         self._x = x
         self._y = y
@@ -42,12 +49,12 @@ class DependencyGraphic(BaseGraphic):
         self.create_graphic()
 
     def create_graphic(self) -> None:
-        self._ax.plot(self._x, self._y, label='График зависимости H от T')
+        self._ax.plot(self._x, self._y, label="График зависимости H от T")
         self.set_title(self._title)
         self.set_labels(*self._labels)
         if self._grid:
             self.add_grid_and_axes()
 
-    def add_plot(self, x, y, label: str = ''):
+    def add_plot(self, x, y, label: str = ""):
         self._ax.plot(x, y, label=label)
         self._ax.legend()

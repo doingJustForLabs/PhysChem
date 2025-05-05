@@ -3,18 +3,15 @@ from statistics import mean
 T = 298.15
 P = 1e5
 
+
 def find_error(
-    x1_exp: list[float],
-    y1_exp: list[float],
-    myT: list[float],
-    flasher2,
-    file_name
+    x1_exp: list[float], y1_exp: list[float], myT: list[float], flasher2, file_name
 ):
     x_errors = []
     y_errors = []
-    
-    with open(file_name, "w", encoding='utf-8') as file:
-    
+
+    with open(file_name, "w", encoding="utf-8") as file:
+
         for i in range(5):
             x_exp = x1_exp[i]
             y_exp = y1_exp[i]
@@ -23,8 +20,8 @@ def find_error(
 
             res = flasher2.flash(T=myT[i], P=P, zs=zs)
 
-            file.write(f'--- T = {myT[i]} K ---\n')
-            file.write(f'Phases: {res.phase_count}\n')
+            file.write(f"--- T = {myT[i]} K ---\n")
+            file.write(f"Phases: {res.phase_count}\n")
 
             # Предсказанные значения
             if res.phase_count == 1:
@@ -41,8 +38,12 @@ def find_error(
             x_errors.append(x_err)
             y_errors.append(y_err)
 
-            file.write(f"x_exp = {x_exp}, x_model = {x_model:.6f}, error = {x_err:.6f}\n")
-            file.write(f"y_exp = {y_exp}, y_model = {y_model:.6f}, error = {y_err:.6f}\n\n")
+            file.write(
+                f"x_exp = {x_exp}, x_model = {x_model:.6f}, error = {x_err:.6f}\n"
+            )
+            file.write(
+                f"y_exp = {y_exp}, y_model = {y_model:.6f}, error = {y_err:.6f}\n\n"
+            )
 
         # Средняя абсолютная ошибка:
         mae_x = mean(x_errors)

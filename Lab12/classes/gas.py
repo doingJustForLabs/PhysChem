@@ -27,6 +27,18 @@ class GasMixing:
         self._gas2 = gas2
 
     def find_delta_entropy(self) -> float:
-        s1 = self._gas1.get_moles * R * log((self._gas1.get_volume + self._gas2.get_volume) / self._gas1.get_volume)
-        s2 = self._gas2.get_moles * R * log((self._gas1.get_volume + self._gas2.get_volume) / self._gas2.get_volume)
+        s1 = (
+            self._gas1.get_moles
+            * R
+            * log(
+                (self._gas1.get_volume + self._gas2.get_volume) / self._gas1.get_volume
+            )
+        )
+        s2 = (
+            self._gas2.get_moles
+            * R
+            * log(
+                (self._gas1.get_volume + self._gas2.get_volume) / self._gas2.get_volume
+            )
+        )
         return s1 + s2
