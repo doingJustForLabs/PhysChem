@@ -1,6 +1,9 @@
+from math import exp
+
 from Lab12.classes.nasa import nasa_db
 from Lab12.classes.reaction import Reaction
 from Lab12.classes.substance import Substance
+from scipy.optimize import minimize, fsolve
 
 r = Reaction("C2H4 + H2 => C2H6")
 
@@ -12,44 +15,44 @@ nasa_db.add_NASA_data(
     ]
 )
 
-A = 7
-B = 8
-D = 3
-
 T = 780
 
-p: dict = {
-    "C2H4": 7,
-    "H2": 8,
-    "C2H6": 3
-}
+p: dict[str, float] = {"C2H4": 7e-4, "H2": 8e-4, "C2H6": 3e-4}
 
 
-def get_n(x: float) -> float:
-    """Число молей всех веществ в состоянии равновесия"""
-
-    res = 0
-    for reag in r.get_reagents:
-        res -= + x * Substance(reag).find_substance_coefficient()[0]
-        res += p[reag]
-
-    for prod in r.get_products:
-        res += x * Substance(prod).find_substance_coefficient()[0]
-        res += p[prod]
-
-    return res
-
-
-if __name__ == '__main__':
-    # 1. ΔG0(T) по полиномам NASA
-    print("Энергия Гиббса:", r.get_gibbs_free_energy(T))
-
-    # 2. Мольные доли веществ в начале реакции
-    for reagent in r.get_reagents:
-        print(f"Мольная доля вещества {Substance(reagent)}:", Substance(reagent).find_substance_coefficient()[0])
+def f(x: float) -> float:
+    numerator = 1
+    denominator = 1
 
     for product in r.get_products:
-        print(f"Мольная доля вещества {Substance(product)}:", Substance(product).find_substance_coefficient()[0])
+        numerator *= p[product] - x
 
-    # 3.
-    print(get_n(1))
+    for reagent in r.get_reagents:
+        denominator *= p[reagent] + x
+
+    return numerator / denominator - K
+
+
+if __name__ == "__main__":
+    # 1. ΔG0(T) по полиномам NASA
+    print(f"Энергия Гиббса: {r.get_gibbs_free_energy(T) * 1e-3:.4f} кДж/Моль")
+
+    # 2. Мольные доли веществ в начале реакции
+    total = sum(p.values())
+    for species in p:
+        mol_frac = p[species] / total
+        print(f"Мольная доля {species}: {mol_frac:.4f}")
+
+    # 3. Константу равновесия Ka
+    K: float = exp(-r.get_gibbs_free_energy(T) / (r.R * T))
+    print(f'Константа равновесия K: {K}')
+
+    # 4. Равновесные концентрации всех веществ в системе
+    x_eq = fsolve(f, 0)[0]
+    print(f'Равновесное значение x: {x_eq:.4e}')
+
+    for substance in p.keys():
+        print(f'[{substance}] = {p[substance] - x_eq:.4e}')
+
+    # 5. Равновесная степень превращения вещества A (C2H4)
+    print(f'Степень превращения вещества A: {x_eq / p["C2H4"]:.4f}')

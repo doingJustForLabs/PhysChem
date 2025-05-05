@@ -3,7 +3,7 @@ from Lab12.classes.reaction import Reaction
 
 """Вариант 23. 2H20(г) + 2Cl2 = 4HCl + O2"""
 
-T = 270
+T = 298
 
 r = Reaction("2H20(г) + 2Cl2 => 4HCl + O2")
 
