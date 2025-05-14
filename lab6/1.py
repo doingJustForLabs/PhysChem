@@ -15,6 +15,10 @@ def deltaH(nasaCoef, T2):
     dH *= R * T2
     return dH
 
+# def deltaH(nasaCoef, T):
+#     a = nasaCoef
+#     return R * T * (a[0] + a[1]*T/2 + a[2]/3*T**2 + a[3]/4*T**3 + a[4]/5*T**4 + a[5]/T)
+
 def calculate_Kp(T, deltaH_result):
     return np.exp(-deltaH_result / (R * T))
 
@@ -24,12 +28,15 @@ def calculate_Kp_temperature_change(deltaH_result, T):
 def calculate_Kp_pressure_change(Kp_base, P):
     return Kp_base * P**delta_v
 
-# C: углерод (графит)
+# C: углерод
 a_C = [-0.31087207E+00, 0.44035369E-02, 0.19039412E-05, -0.63854697E-08, 0.29896425E-11, -0.10865079E+03, 0.11138295E+01]
 # H2: водород
 a_H2 = [0.23443029E+01, 0.79804248E-02, -0.19477917E-04, 0.20156967E-07, -0.73760289E-11, -0.91792413E+03, 0.68300218E+00]
 # CH4: метан
 a_CH4 = [5.14825732E+00, -1.37002410E-02, 4.93749414E-05, -4.91952339E-08, 1.70097299E-11, -1.02453222E+04, -4.63322726E+00]
+
+
+a_N2 = [3.53100528E+00, -1.23660988E-04, -5.02999433E-07, 2.43530612E-09, -1.40881235E-12, -1.04697628E+03, 2.96747038E+00]
 
 dH_C = deltaH(a_C, T2)
 dH_H2 = deltaH(a_H2, T2)
