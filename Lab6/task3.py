@@ -2,65 +2,81 @@ from math import exp, log
 
 from scipy.optimize import minimize
 
-R = 8.314
+from Lab12.classes.reaction import Reaction
+
 T = 600  # K
 P = 133000  # Па
 
+r1 = Reaction("(CH3)2CO => C2H4 + H2 + CO")
+r2 = Reaction("C2H4 + H2 => C2H6")
+
 deltaG1 = -100000  # Дж/моль
-deltaG2 = -35000   # Дж/моль
+deltaG2 = -35000  # Дж/моль
 
-Kx1 = exp(-deltaG1 / (R * T))
-Kx2 = exp(-deltaG2 / (R * T))
+Kx1 = exp(-deltaG1 / (Reaction.R * T))
+Kx2 = exp(-deltaG2 / (Reaction.R * T))
+
+N = lambda x: {
+    "(CH3)2CO": 0.6 - x[0],
+    "C2H4": x[0] - x[1],
+    "H2": x[0] - x[1],
+    "CO": x[0],
+    "C2H6": x[1],
+    "N2": 0.4,
+}
 
 
-def objective(vars: tuple[float, float]) -> float:
-    x, y = vars
-
-    n = {
-        "acetone": 0.6 - x,
-        "C2H4": x - y,
-        "H2": x - y,
-        "CO": x,
-        "C2H6": y,
+def f(x: list[float]) -> float:
+    N = {
+        "(CH3)2CO": 0.6 - x[0],
+        "C2H4": x[0] - x[1],
+        "H2": x[0] - x[1],
+        "CO": x[0],
+        "C2H6": x[1],
         "N2": 0.4,
     }
 
-    total_n = sum(n.values())
-    penalty = 0
+    total_n = sum(N.values())
+    total_v1 = len(r1.get_reagents) - len(r1.get_products)
+    total_v2 = len(r2.get_reagents) - len(r2.get_products)
 
-    if n["acetone"] <= 0 or total_n <= 0:
-        penalty += 1e30
-    else:
-        Kp1 = (n["C2H4"] * n["H2"] * n["CO"]) / n["acetone"] * (P / total_n) ** 2
-        penalty += abs(log(Kp1 + 1e-12) - log(Kx1 + 1e-12))
+    Kn1 = (N["C2H4"] * N["H2"] * N["CO"]) / (N["(CH3)2CO"])
+    Kp1 = Kn1 * total_n ** (-total_v1) * P**total_v1
 
-    if n["C2H4"] <= 0 or n["H2"] <= 0:
-        penalty += 1e30
-    else:
-        Kp2 = n["C2H6"] / (n["C2H4"] * n["H2"]) * (total_n / P)
-        penalty += abs(log(Kp2 + 1e-12) - log(Kx2 + 1e-12))
+    Kn2 = (N["C2H6"]) / (N["C2H4"] * N["H2"])
+    Kp2 = Kn2 * total_n ** (-total_v2) * P**total_v2
 
-    return penalty
+    return abs(Kp1 - Kx1) + abs(Kp2 - Kx2)
 
 
 if __name__ == "__main__":
-    result = minimize(objective, [0.5, 0.4], method='Nelder-Mead', tol=1e-8)
-    x, y = result.x
+    result = minimize(f, [0.4, 0.01], method="Nelder-Mead", tol=1e-8)
+    x = result.x
 
-    n = {
-        "(CH3)2CO": max(0.6 - x, 0),
-        "C2H4": max(x - y, 0),
-        "H2": max(x - y, 0),
-        "CO": x,
-        "C2H6": y,
+    N = {
+        "(CH3)2CO": 0.6 - x[0],
+        "C2H4": x[0] - x[1],
+        "H2": x[0] - x[1],
+        "CO": x[0],
+        "C2H6": x[1],
         "N2": 0.4,
     }
 
-    total_n = sum(n.values())
-    conversion = (x / 0.6) * 100
+    print("1. Константы равновесия:")
+    print(f"- Ka1 (разложение ацетона) = {Kx1:.3e}")
+    print(f"- Ka2 (синтез этана) = {Kx2:.3e}")
 
-    print(f"Решение найдено: x = {x:.6f}, y = {y:.6f}")
-    print("\nРавновесные мольные доли (%):")
-    for species, amount in n.items():
-        print(f"{species}: {amount / total_n * 100:.6f}%")
-    print(f"\nСтепень превращения (CH3)2CO: {conversion:.6f}%")
+    print("2. Равновесные мольные доли (%):")
+
+    total_n = sum(N.values())
+
+    for species, amount in N.items():
+        print(f"- [{species}]: {amount / total_n * 100:.3f} %")
+
+    print("3. Равновесные концентрации:")
+
+    for species, amount in N.items():
+        print(f"- [{species}]: {(amount / total_n) * P / (Reaction.R * T):.3f} моль/м3")
+
+    conversion = (x[0] / 0.6) * 100
+    print(f"4. Конверсия (CH3)2CO: {conversion:.3f}%")

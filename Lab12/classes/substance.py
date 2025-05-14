@@ -23,7 +23,7 @@ class Substance(Enthalpy, Entropy, HeatCapacity):
                 point += 1
             return [int(prod), self._substance[point:]]
 
-    def get_enthalpy(self, temperature: int) -> float:
+    def get_enthalpy(self, temperature: float) -> float:
         res = 0
         substance_coefficient, cur_substance = self.find_substance_coefficient()
         coefficients = nasa_db.get_NASA()[cur_substance]
@@ -33,7 +33,7 @@ class Substance(Enthalpy, Entropy, HeatCapacity):
         res += coefficients[-2] / temperature
         return (substance_coefficient * res) * (self.R * temperature)
 
-    def get_heat_capacity(self, temperature: int) -> float:
+    def get_heat_capacity(self, temperature: float) -> float:
         res = 0
         substance_coefficient, cur_substance = self.find_substance_coefficient()
         coefficients = nasa_db.get_NASA()[cur_substance]
@@ -42,7 +42,7 @@ class Substance(Enthalpy, Entropy, HeatCapacity):
             res += coefficients[idx] * temperature**idx
         return (substance_coefficient * res) * self.R
 
-    def get_entropy(self, temperature: int) -> float:
+    def get_entropy(self, temperature: float) -> float:
         res = 0
         substance_coefficient, cur_substance = self.find_substance_coefficient()
         coefficients = nasa_db.get_NASA()[cur_substance]

@@ -34,8 +34,9 @@ def f(x: float) -> float:
 
 
 if __name__ == "__main__":
+    print(f"Реакция: {r}")
     # 1. ΔG0(T) по полиномам NASA
-    print(f"Энергия Гиббса: {r.get_gibbs_free_energy(T) * 1e-3:.4f} кДж/Моль")
+    print(f"Энергия Гиббса: {r.get_gibbs_free_energy(T) * 1e-3:.4f} кДж/Моль\N")
 
     # 2. Мольные доли веществ в начале реакции
     total = sum(p.values())
@@ -45,14 +46,14 @@ if __name__ == "__main__":
 
     # 3. Константу равновесия Ka
     K: float = exp(-r.get_gibbs_free_energy(T) / (r.R * T))
-    print(f'Константа равновесия K: {K}')
+    print(f"Константа равновесия K: {K}")
 
     # 4. Равновесные концентрации всех веществ в системе
     x_eq = fsolve(f, 0)[0]
-    print(f'Равновесное значение x: {x_eq:.4e}')
+    print(f"Равновесное значение x: {x_eq:.4e}")
 
     for substance in p.keys():
-        print(f'[{substance}] = {p[substance] - x_eq:.4e}')
+        print(f"- [{substance}] = {p[substance] - x_eq:.4e}")
 
     # 5. Равновесная степень превращения вещества A (C2H4)
-    print(f'Степень превращения вещества A: {x_eq / p["C2H4"]:.3f}')
+    print(f'Степень превращения вещества A: {x_eq / p["C2H4"] * 100:.3f}%')
