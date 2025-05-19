@@ -48,7 +48,8 @@ plt.title('Кинетические кривые изомеризации гек
 plt.legend(fontsize=12)
 plt.grid(True, linestyle='--', alpha=0.7)
 
-# Показать стационарное состояние на графике
+# Численный метод - Берем для стационарного состояния последние значения для каждого вещества, так как
+# на графике уже четко видно, что на последних секундах достигнуто стационарное состояние
 final_time = solution.t[-1]
 final_concentrations = solution.y[:,-1]
 plt.axhline(y=final_concentrations[0], color='b', linestyle=':', alpha=0.5)
@@ -66,9 +67,17 @@ plt.xlim([0, t_max*1.1])
 plt.tight_layout()
 plt.show()
 
-# Вывод стационарных концентраций
 print("\nСтационарные концентрации:")
 print(f"Гексан: {final_concentrations[0]:.6f} моль/л")
 print(f"2-метилпентан: {final_concentrations[1]:.6f} моль/л")
 print(f"2,3-диметилбутан: {final_concentrations[2]:.6f} моль/л")
 
+# Аналитический метод
+final_concentrations[0] = 0
+final_concentrations[1] = k1/(k1+k2)*C0_C6H14
+final_concentrations[2] = k2/(k1+k2)*C0_C6H14
+
+print("\nСтационарные концентрации: (Аналитический метод)")
+print(f"Гексан: {final_concentrations[0]:.6f} моль/л")
+print(f"2-метилпентан: {final_concentrations[1]:.6f} моль/л")
+print(f"2,3-диметилбутан: {final_concentrations[2]:.6f} моль/л")
