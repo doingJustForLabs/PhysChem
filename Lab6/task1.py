@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     enthalpy = r.get_enthalpy(T)
 
-    print(f"Энтальпия реакции: {enthalpy / 1000:.4f} кДж/Моль\N")
+    print(f"Энтальпия реакции: {enthalpy / 1000:.4f} кДж/Моль\n")
 
     # Расчитываем число молей газа
     delta_v = 0

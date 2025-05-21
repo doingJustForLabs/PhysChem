@@ -36,7 +36,7 @@ def f(x: float) -> float:
 if __name__ == "__main__":
     print(f"Реакция: {r}")
     # 1. ΔG0(T) по полиномам NASA
-    print(f"Энергия Гиббса: {r.get_gibbs_free_energy(T) * 1e-3:.4f} кДж/Моль\N")
+    print(f"Энергия Гиббса: {r.get_gibbs_free_energy(T) * 1e-3:.4f} кДж/Моль\n")
 
     # 2. Мольные доли веществ в начале реакции
     total = sum(p.values())

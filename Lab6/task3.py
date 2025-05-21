@@ -16,15 +16,6 @@ deltaG2 = -35000  # Дж/моль
 Kx1 = exp(-deltaG1 / (Reaction.R * T))
 Kx2 = exp(-deltaG2 / (Reaction.R * T))
 
-N = lambda x: {
-    "(CH3)2CO": 0.6 - x[0],
-    "C2H4": x[0] - x[1],
-    "H2": x[0] - x[1],
-    "CO": x[0],
-    "C2H6": x[1],
-    "N2": 0.4,
-}
-
 
 def f(x: list[float]) -> float:
     N = {
